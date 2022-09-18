@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "api:generate:dev": "npx swagger-typescript-api -p http://localhost:3001/api-json --axios --modular -o ./src/api"
   },
   "dependencies": {
     "next": "12.3.0",
