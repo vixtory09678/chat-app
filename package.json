@@ -1,0 +1,12 @@
+{
+  "name": "chat-app",
+  "private": "true",
+  "workspaces": [
+    "api",
+    "web"
+  ],
+  "scripts": {
+    "api:dev": "yarn workspace api start:dev",
+    "web:dev": "yarn workspace web dev"
+  }
+}
