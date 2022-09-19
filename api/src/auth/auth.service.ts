@@ -40,4 +40,15 @@ export class AuthService {
       },
     });
   }
+
+  async logout(sid: string) {
+    try {
+      await this.prismaService.session.delete({
+        where: { id: sid },
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new BadRequestException(error);
+    }
+  }
 }
