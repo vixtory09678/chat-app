@@ -5,8 +5,9 @@ import { AppModule } from './app.module';
 import { PrismaService } from './prisma/prisma.service';
 import expressSession from 'express-session';
 import { ConfigService } from '@nestjs/config';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-async function globalSetup(app: NestExpressApplication) {
+function globalSetup(app: NestExpressApplication) {
   const prismaService = app.get(PrismaService);
   const config = app.get(ConfigService);
 
@@ -29,13 +30,37 @@ async function globalSetup(app: NestExpressApplication) {
   );
 }
 
+function getSwaggerDocumentConfiguration(app: NestExpressApplication) {
+  const config = new DocumentBuilder()
+    .setTitle('Cats example')
+    .setDescription('The cats API description')
+    .setVersion('1.0')
+    .addTag('cats')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+
+  return document;
+}
+
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  globalSetup(app);
 
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
-  globalSetup(app);
-  await app.listen(3000);
+
+  app.setGlobalPrefix('api');
+
+  const configService = app.get(ConfigService);
+  const port = configService.get('PORT', 3001);
+  const getENV = configService.get('NODE_ENV', 'development');
+
+  if (getENV === 'development') {
+    const document = getSwaggerDocumentConfiguration(app);
+    SwaggerModule.setup('api', app, document);
+  }
+
+  await app.listen(port);
 }
 
 bootstrap();

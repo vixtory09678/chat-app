@@ -7,6 +7,8 @@ import { PrismaService } from '../prisma/prisma.service';
 export class AuthService {
   private logger = new Logger(AuthService.name);
 
+  constructor(private prismaService: PrismaService) {}
+
   async login(loginDto: UserLoginDto) {
     try {
       const { password: hashedPassword } =
@@ -26,7 +28,17 @@ export class AuthService {
       throw new BadRequestException(error);
     }
   }
-  constructor(private prismaService: PrismaService) {}
+
+  async logout(sid: string) {
+    try {
+      await this.prismaService.session.delete({
+        where: { id: sid },
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new BadRequestException(error);
+    }
+  }
 
   async register(registerDto: UserRegisterDto) {
     const ROUNDS = 10;
@@ -39,16 +51,5 @@ export class AuthService {
         displayName: registerDto.username,
       },
     });
-  }
-
-  async logout(sid: string) {
-    try {
-      await this.prismaService.session.delete({
-        where: { id: sid },
-      });
-    } catch (error) {
-      this.logger.error(error);
-      throw new BadRequestException(error);
-    }
   }
 }
