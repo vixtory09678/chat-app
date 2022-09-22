@@ -11,6 +11,12 @@ function globalSetup(app: NestExpressApplication) {
   const prismaService = app.get(PrismaService);
   const config = app.get(ConfigService);
 
+  app.enableCors({
+    credentials: true,
+    origin: ['http://localhost:3000'],
+    methods: '*',
+  });
+
   const sessionSecret = config.get<string>('SESSION_SECRET', '');
 
   app.use(
@@ -18,6 +24,7 @@ function globalSetup(app: NestExpressApplication) {
       cookie: {
         maxAge: 7 * 24 * 60 * 60 * 1000, // ms
       },
+      name: 'CHAT_APP_SESSION',
       secret: sessionSecret,
       resave: true,
       saveUninitialized: false,
