@@ -7,19 +7,29 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "api:generate:dev": "npx swagger-typescript-api -p http://localhost:3001/api-json --axios --modular -o ./src/api"
+    "gen:api": "yarn swagger-typescript-api -p http://localhost:3001/api-json -r --axios --modular -o ./src/api"
   },
   "dependencies": {
+    "@hookform/error-message": "^2.0.0",
+    "@types/lodash": "^4.14.185",
+    "cookies-next": "^2.1.1",
+    "lodash": "^4.17.21",
     "next": "12.3.0",
+    "notistack": "^2.0.5",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.36.0"
   },
   "devDependencies": {
     "@types/node": "18.7.18",
     "@types/react": "18.0.20",
     "@types/react-dom": "18.0.6",
+    "autoprefixer": "^10.4.11",
     "eslint": "8.23.1",
     "eslint-config-next": "12.3.0",
-    "typescript": "4.8.3"
+    "postcss": "^8.4.16",
+    "swagger-typescript-api": "^10.0.1",
+    "tailwindcss": "^3.1.8",
+    "typescript": "4.7.4"
   }
 }

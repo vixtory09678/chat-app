@@ -1,0 +1,24 @@
+.message-left {
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 15px;
+  border-radius: 5px 20px 20px 20px;
+}
+
+.message-right {
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 15px;
+  border-radius: 20px 5px 20px 20px;
+}
+
+textarea {
+  border: 0 none;
+  overflow: hidden; /*overflow is set to auto at max height using JS */
+  background:lightcyan;
+  font-family: sans-serif;
+  min-height: 16px;
+  max-height: 314px;
+  height: auto;
+  resize: none;
+}

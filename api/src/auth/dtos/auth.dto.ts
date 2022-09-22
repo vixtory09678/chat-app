@@ -14,6 +14,7 @@ export class UserRegisterDto {
     message:
       'password must be at least 8 characters, at least one letter and one number',
   })
+  @ApiProperty()
   password: string;
 }
 

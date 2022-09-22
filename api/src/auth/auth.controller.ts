@@ -26,7 +26,10 @@ export class AuthController {
 
   @Post('/register')
   @HttpCode(HttpStatus.CREATED)
-  @ApiBody({ type: UserRegisterDto, required: true })
+  @ApiBody({
+    type: UserRegisterDto,
+    required: true,
+  })
   @ApiCreatedResponse()
   async register(@Body() registerDto: UserRegisterDto) {
     console.log(registerDto);
