@@ -19,4 +19,5 @@ api.instance.interceptors.response.use((response) => {
     deleteCookie(COOKIE_APP);
     window.location.replace(APP_URL + '/login');
   }
+  return response;
 });

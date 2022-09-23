@@ -10,8 +10,12 @@
     "gen:api": "yarn swagger-typescript-api -p http://localhost:3001/api-json -r --axios --modular -o ./src/api"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
     "@hookform/error-message": "^2.0.0",
+    "@mui/material": "^5.10.6",
     "@types/lodash": "^4.14.185",
+    "axios": "^0.27.2",
     "cookies-next": "^2.1.1",
     "lodash": "^4.17.21",
     "next": "12.3.0",

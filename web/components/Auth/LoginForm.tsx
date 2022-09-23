@@ -4,6 +4,11 @@ import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { useRouter } from 'next/router';
 import { api } from '../../services/apiInstance';
+import { useSnackbar } from 'notistack';
+import {
+  getSimpleErrorMessage,
+  toastMessage,
+} from '../../src/api/error-handling';
 
 type LoginSubmitType = {
   username: string;
@@ -17,15 +22,25 @@ export function LoginForm({}) {
     register,
     formState: { errors },
   } = useForm();
+  const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit = async (data: any) => {
     const { username, password } = data as LoginSubmitType;
 
-    const res = await api.authControllerLogin({ username, password });
-    if (res.status !== 200) {
-      throw new Error('Login failed');
-    }
-    replace('/');
+    api
+      .authControllerLogin({ username, password })
+      .then((res) => {
+        if (res?.status !== 200) {
+          console.error('Login failed');
+        }
+        toastMessage('Success', { variant: 'success' }, enqueueSnackbar);
+        replace('/');
+      })
+      .catch((error) => {
+        console.error(error);
+        const errMessage = getSimpleErrorMessage(error);
+        toastMessage(errMessage, { variant: 'error' }, enqueueSnackbar);
+      });
   };
   return (
     <>

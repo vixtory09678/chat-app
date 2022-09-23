@@ -23,6 +23,7 @@ function globalSetup(app: NestExpressApplication) {
     expressSession({
       cookie: {
         maxAge: 7 * 24 * 60 * 60 * 1000, // ms
+        httpOnly: false,
       },
       name: 'CHAT_APP_SESSION',
       secret: sessionSecret,

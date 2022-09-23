@@ -11,21 +11,20 @@ export class AuthService {
 
   async login(loginDto: UserLoginDto) {
     try {
-      const { password: hashedPassword } =
-        await this.prismaService.user.findUnique({
-          where: {
-            username: loginDto.username,
-          },
-        });
+      const user = await this.prismaService.user.findUniqueOrThrow({
+        where: {
+          username: loginDto.username,
+        },
+      });
 
-      const isMatch = await bcrypt.compare(loginDto.password, hashedPassword);
+      const isMatch = await bcrypt.compare(loginDto.password, user?.password);
 
       if (!isMatch) {
         throw new Error('Incorrect username or password');
       }
     } catch (error) {
-      this.logger.error(error);
-      throw new BadRequestException(error);
+      this.logger.error(error.message);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -35,8 +34,8 @@ export class AuthService {
         where: { id: sid },
       });
     } catch (error) {
-      this.logger.error(error);
-      throw new BadRequestException(error);
+      this.logger.error(error.message);
+      throw new BadRequestException(error.message);
     }
   }
 

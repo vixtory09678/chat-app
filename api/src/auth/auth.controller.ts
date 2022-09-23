@@ -32,7 +32,6 @@ export class AuthController {
   })
   @ApiCreatedResponse()
   async register(@Body() registerDto: UserRegisterDto) {
-    console.log(registerDto);
     await this.authService.register(registerDto);
   }
 
@@ -42,7 +41,6 @@ export class AuthController {
   @ApiOkResponse()
   async login(@Session() session: SessionBody, @Body() loginDto: UserLoginDto) {
     session.username = loginDto.username;
-    console.log('session', session);
     await this.authService.login(loginDto);
   }
 
@@ -50,7 +48,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
   async logout(@Session() session: Record<string, any>) {
-    this.authService.logout(session.sid);
+    await this.authService.logout(session.id);
     session.destroy();
   }
 
