@@ -1,4 +1,4 @@
-import { deleteCookie, getCookie, getCookies, hasCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 import { isUndefined } from 'lodash';
 import { useRouter } from 'next/router';
 import { createContext, useEffect, useState } from 'react';

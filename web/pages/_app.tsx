@@ -6,6 +6,7 @@ import { ReactElement, ReactNode } from 'react';
 import { SnackbarProvider } from 'notistack';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  // eslint-disable-next-line no-unused-vars
   layout: (page: ReactElement) => ReactNode;
 };
 

@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { api } from '../../services/apiInstance';

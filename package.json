@@ -7,6 +7,7 @@
   ],
   "scripts": {
     "api:dev": "yarn workspace api start:dev",
-    "web:dev": "yarn workspace web dev"
+    "web:dev": "yarn workspace web dev",
+    "lint": "yarn workspace web lint && yarn workspace api lint"
   }
 }
