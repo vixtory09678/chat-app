@@ -1,0 +1,34 @@
+name: "Frontend"
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - web/**
+
+concurrency:
+  group: ${GITHUB_REF#refs/heads/}-web
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: "Build and Test"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run ESLint/Prettier
+        run: yarn web:lint
+      - name: Run build
+        run: yarn web:build
+      - name: Unit Test
+        run: yarn web:test

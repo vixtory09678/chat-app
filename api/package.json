@@ -11,17 +11,18 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "migrate:dev": "yarn prisma migrate dev",
+    "migrate:deploy": "yarn prisma migrate deploy",
     "db:up": "docker compose up -d",
     "dev": "nest start --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test": "DATABASE_URL=postgresql://postgres:password@localhost:5432/chat_app_test jest -i",
+    "test:watch": "DATABASE_URL=postgresql://postgres:password@localhost:5432/chat_app_test jest --watch -i",
+    "test:cov": "DATABASE_URL=postgresql://postgres:password@localhost:5432/chat_app_test jest --coverage -i",
+    "test:debug": "DATABASE_URL=postgresql://postgres:password@localhost:5432/chat_app_test node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand -i",
+    "test:e2e": "DATABASE_URL=postgresql://postgres:password@localhost:5432/chat_app_test jest --config ./test/jest-e2e.json -i"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

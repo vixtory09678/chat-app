@@ -8,6 +8,12 @@
   "scripts": {
     "api:dev": "yarn workspace api start:dev",
     "web:dev": "yarn workspace web dev",
+    "api:test": "yarn workspace api test",
+    "web:test": "yarn workspace web test",
+    "api:lint": "yarn workspace api lint",
+    "web:lint": "yarn workspace web lint",
+    "api:build": "yarn workspace api build",
+    "web:build": "yarn workspace web build",
     "lint": "yarn workspace web lint && yarn workspace api lint"
   }
 }
