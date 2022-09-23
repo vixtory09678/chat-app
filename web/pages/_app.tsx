@@ -3,6 +3,7 @@ import '../styles/home/message.css';
 import type { AppProps } from 'next/app';
 import { NextPage } from 'next';
 import { ReactElement, ReactNode } from 'react';
+import { SnackbarProvider } from 'notistack';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   layout: (page: ReactElement) => ReactNode;
@@ -14,7 +15,11 @@ type AppPropsWithLayout = AppProps & {
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const layout = Component.layout || ((page) => <>{page}</>);
-  return layout(<Component {...pageProps} />);
+  return (
+    <SnackbarProvider maxSnack={3}>
+      {layout(<Component {...pageProps} />)}
+    </SnackbarProvider>
+  );
 }
 
 export default MyApp;
