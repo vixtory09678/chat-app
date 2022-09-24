@@ -1,12 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { isUndefined } from 'lodash';
 
 export function MessageSender() {
   const [height, setHeight] = useState<number>(40);
-
-  const setHeightMessage = () => {
-    return 'h-[' + height.toString() + 'px]';
-  };
+  const [message, setMessage] = useState<string>('');
 
   return (
     <>
@@ -18,17 +15,22 @@ export function MessageSender() {
           className={`rounded-[10px] flex-grow p-2 overflow-scroll`}
           onInput={(e) => {
             const getMessageLine = e.currentTarget?.value.split('\n').length;
+            const getMessage = e.currentTarget?.value;
             if (isUndefined(getMessageLine)) return;
+
+            setMessage(getMessage);
             setHeight((prev) => {
               if (getMessageLine > 6) return prev;
               return (prev = (getMessageLine - 1) * 24 + 40);
             });
           }}
+          onKeyDown={(e) => console.log(e.code)}
           placeholder="Type message.."
         />
         <button
           type="button"
           className="h-10 rounded-full px-5 bg-blue-400 hover:bg-blue-500 text-white"
+          onClick={() => console.log(message)}
         >
           Send
         </button>
