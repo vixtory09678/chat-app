@@ -1,13 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
-import { ReactElement } from 'react';
+import { ReactElement, useContext } from 'react';
 import { ChatHistoryItem } from '../components/Home/ChatHistoryItem';
 import { MessageSender } from '../components/Home/MessageSender';
 import { Message } from '../components/Home/Message';
 import { SignOutBox } from '../components/Home/SignOutBox';
 import { SideHeader } from '../components/Home/SideHeader';
-import { AuthContextProvider } from '../src/contexts/AuthContext';
+import { AuthContextProvider, UserContext } from '../src/contexts/AuthContext';
+import { UserProfile } from '../components/Home/UserProfile';
 
 function HomePage({}) {
+  const user = useContext(UserContext);
+
   return (
     <>
       <div className="h-screen w-screen bg-slate-100 flex">
@@ -60,21 +63,11 @@ function HomePage({}) {
           <MessageSender />
         </div>
 
-        {/* Friend Profile */}
-        <div className="flex flex-col w-[310px] border-l-2 items-center gap-4">
-          <img
-            src={'mock/team-profile.jpeg'}
-            height={200}
-            width={200}
-            alt=""
-            className="rounded-full pt-5"
-          />
-          <p className="font-light text-xl text-center">
-            Wannachat Surasiang
-            <br />
-            Team
-          </p>
-        </div>
+        {/* Profile */}
+        <UserProfile
+          profile={user.profile!}
+          updateProfile={user.updateProfile}
+        />
       </div>
     </>
   );

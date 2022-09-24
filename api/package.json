@@ -13,6 +13,7 @@
     "migrate:dev": "yarn prisma migrate dev",
     "migrate:deploy": "yarn prisma migrate deploy",
     "db:up": "docker compose up -d",
+    "db:createTest": "ts-node scripts/create-test-db.ts",
     "dev": "nest start --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -36,6 +37,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "express-session": "^1.17.3",
+    "nanoid": "3.3.4",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"

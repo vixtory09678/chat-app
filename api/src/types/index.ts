@@ -1,3 +1,3 @@
 export type SessionBody = {
-  username: string;
+  userId: string;
 };

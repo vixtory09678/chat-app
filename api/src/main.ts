@@ -14,7 +14,7 @@ function globalSetup(app: NestExpressApplication) {
   app.enableCors({
     credentials: true,
     origin: ['http://localhost:3000'],
-    methods: '*',
+    methods: ['GET', 'PUT', 'DELETE', 'POST', 'PATCH'],
   });
 
   const sessionSecret = config.get<string>('SESSION_SECRET', '');
