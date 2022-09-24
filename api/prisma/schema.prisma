@@ -11,10 +11,12 @@ datasource db {
 }
 
 model User {
-  id          String @id @default(uuid())
-  username    String @unique
-  password    String
-  displayName String @map("display_name")
+  id              String  @id @default(uuid())
+  username        String  @unique
+  password        String
+  displayName     String  @map("display_name")
+  profileImageUrl String? @map("image_url")
+  profileColor    String? @map("profile_color")
 }
 
 model Session {
