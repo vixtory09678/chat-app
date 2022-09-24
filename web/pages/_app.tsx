@@ -21,7 +21,7 @@ type AppPropsWithLayout = AppProps & {
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const layout = Component.layout || ((page) => <>{page}</>);
   const MQTT_BROKER_URL = publicRuntimeConfig.NEXT_PUBLIC_MQTT_BROKER_URL;
-  console.log('url', MQTT_BROKER_URL);
+
   return (
     <SnackbarProvider maxSnack={3}>
       <Connector
