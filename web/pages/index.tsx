@@ -6,8 +6,10 @@ import { Message } from '../components/Home/Message';
 import { SignOutBox } from '../components/Home/SignOutBox';
 import { SideHeader } from '../components/Home/SideHeader';
 import { AuthContextProvider } from '../src/contexts/AuthContext';
+import { useMqttState } from 'mqtt-react-hooks';
 
 function HomePage({}) {
+  const { connectionStatus } = useMqttState();
   return (
     <>
       <div className="h-screen w-screen bg-slate-100 flex">
@@ -38,6 +40,7 @@ function HomePage({}) {
         {/* Chat Box */}
         <div className="flex flex-col flex-grow">
           <div className="flex flex-col gap-1 p-5 bg-slate-50 w-full flex-grow">
+            <p>{`${connectionStatus}`}</p>
             <Message
               friendImageProfileUrl={'mock/team-profile.jpeg'}
               message={{ text: 'Hello!!', time: '12:32 10/12/22' }}

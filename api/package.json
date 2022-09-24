@@ -12,7 +12,7 @@
     "start": "nest start",
     "migrate:dev": "yarn prisma migrate dev",
     "migrate:deploy": "yarn prisma migrate deploy",
-    "db:up": "docker compose up -d",
+    "service:up": "docker compose up -d",
     "dev": "nest start --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
