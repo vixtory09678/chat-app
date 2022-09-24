@@ -42,8 +42,10 @@ function HomePage({}) {
 
         {/* Chat Box */}
         <div className="flex flex-col flex-grow">
-          <div className="flex flex-col gap-1 p-5 bg-slate-50 w-full flex-grow">
+          <div className="bg-slate-100 px-5 py-3 border-b-2">
             <p>{`${connectionStatus}`}</p>
+          </div>
+          <div className="flex flex-col gap-1 p-5 bg-slate-50 w-full flex-grow overflow-scroll">
             <Message
               friendImageProfileUrl={'mock/team-profile.jpeg'}
               message={{ text: 'Hello!!', time: '12:32 10/12/22' }}
