@@ -19,6 +19,7 @@
     "axios": "^0.27.2",
     "cookies-next": "^2.1.1",
     "lodash": "^4.17.21",
+    "mqtt-react-hooks": "^3.0.0-alpha.2",
     "next": "12.3.0",
     "notistack": "^2.0.5",
     "react": "18.2.0",

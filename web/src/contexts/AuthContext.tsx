@@ -1,9 +1,11 @@
 import { deleteCookie, getCookie } from 'cookies-next';
 import { isUndefined } from 'lodash';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { createContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { UserResponse } from '../api/data-contracts';
+import { errorHandler } from '../api/error-handling';
 import { userFetcher } from '../api/fetchers';
 
 type AuthContextType = {
@@ -43,9 +45,12 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [authContext, setAuthContext] =
     useState<AuthContextType>(defaultAuthContext);
   const { replace } = useRouter();
-  const { data: profile, mutate: updateProfile } = useSWR(
+  const { enqueueSnackbar: toastProvider } = useSnackbar();
+
+  const { data: profile, mutate: updateProfile } = useSWR<UserResponse>(
     '/profile',
     userFetcher,
+    { onError: (error) => errorHandler(error, toastProvider) },
   );
 
   useEffect(() => {
