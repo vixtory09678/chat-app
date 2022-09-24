@@ -2,6 +2,9 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { UserLoginDto, UserRegisterDto } from './dtos/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
+import { plainToInstance } from 'class-transformer';
+import { UserResponse } from '../user/dtos/user.dto';
+import { genHexColor } from '../utils/generate-unique';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +25,8 @@ export class AuthService {
       if (!isMatch) {
         throw new Error('Incorrect username or password');
       }
+
+      return plainToInstance(UserResponse, user);
     } catch (error) {
       this.logger.error(error.message);
       throw new BadRequestException(error.message);
@@ -48,6 +53,7 @@ export class AuthService {
         username: registerDto.username,
         password: hash,
         displayName: registerDto.username,
+        profileColor: genHexColor(),
       },
     });
   }

@@ -7,6 +7,7 @@ import {
   Post,
   Req,
   Session,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -16,8 +17,10 @@ import {
 } from '@nestjs/swagger';
 import { Request } from 'express';
 import { SessionBody } from '../types';
+import { UserResponse } from '../user/dtos/user.dto';
 import { AuthService } from './auth.service';
 import { UserLoginDto, UserRegisterDto } from './dtos/auth.dto';
+import { UserGuard } from './guard/UserGuard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -38,13 +41,18 @@ export class AuthController {
   @Post('/login')
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: UserLoginDto, required: true })
-  @ApiOkResponse()
-  async login(@Session() session: SessionBody, @Body() loginDto: UserLoginDto) {
-    session.username = loginDto.username;
-    await this.authService.login(loginDto);
+  @ApiOkResponse({ type: UserResponse })
+  async login(
+    @Session() session: SessionBody,
+    @Body() loginDto: UserLoginDto,
+  ): Promise<UserResponse> {
+    const responseUser = await this.authService.login(loginDto);
+    session.userId = responseUser.id;
+    return responseUser;
   }
 
   @Post('/logout')
+  @UseGuards(UserGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
   async logout(@Session() session: Record<string, any>) {

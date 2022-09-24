@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { api } from '../../services/apiInstance';
 import { useRouter } from 'next/router';
+import { useRef } from 'react';
 
 type RegisterSubmitType = {
   username: string;
@@ -11,11 +12,14 @@ type RegisterSubmitType = {
 
 export function RegisterForm() {
   const { replace } = useRouter();
+  const password = useRef({});
   const {
     handleSubmit,
     register,
+    watch,
     formState: { errors },
   } = useForm();
+  password.current = watch('password', '');
 
   const onSubmit = async (data: any) => {
     const { username, password } = data as RegisterSubmitType;
@@ -84,6 +88,8 @@ export function RegisterForm() {
               value: true,
               message: 'Password is required',
             },
+            validate: (value) =>
+              value === password.current || 'The password is not match',
             minLength: {
               value: 8,
               message: 'Password should be at least 8 characters',

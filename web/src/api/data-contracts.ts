@@ -18,3 +18,15 @@ export interface UserLoginDto {
   username: string;
   password: string;
 }
+
+export interface UserResponse {
+  id: string;
+  username: string;
+  displayName: string;
+  profileImageUrl: string | null;
+  profileColor: string;
+}
+
+export interface UpdateUserDto {
+  displayName: string;
+}
