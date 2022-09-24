@@ -13,6 +13,7 @@
     "migrate:dev": "yarn prisma migrate dev",
     "migrate:deploy": "yarn prisma migrate deploy",
     "db:up": "docker compose up -d",
+    "db:createTest": "ts-node scripts/create-test-db.ts",
     "dev": "nest start --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
