@@ -9,7 +9,12 @@
  * ---------------------------------------------------------------
  */
 
-import { UserLoginDto, UserRegisterDto } from './data-contracts';
+import {
+  UpdateUserDto,
+  UserLoginDto,
+  UserRegisterDto,
+  UserResponse,
+} from './data-contracts';
 import { ContentType, HttpClient, RequestParams } from './http-client';
 
 export class Api<
@@ -54,14 +59,15 @@ export class Api<
    * @tags auth
    * @name AuthControllerLogin
    * @request POST:/api/auth/login
-   * @response `200` `void`
+   * @response `200` `UserResponse`
    */
   authControllerLogin = (data: UserLoginDto, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<UserResponse, any>({
       path: `/api/auth/login`,
       method: 'POST',
       body: data,
       type: ContentType.Json,
+      format: 'json',
       ...params,
     });
   /**
@@ -90,6 +96,56 @@ export class Api<
     this.request<void, any>({
       path: `/api/auth/test_session`,
       method: 'GET',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags user
+   * @name UserControllerGetUsers
+   * @request GET:/api/users
+   * @response `200` `(UserResponse)[]`
+   */
+  userControllerGetUsers = (params: RequestParams = {}) =>
+    this.request<UserResponse[], any>({
+      path: `/api/users`,
+      method: 'GET',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags user
+   * @name UserControllerGetUserProfile
+   * @request GET:/api/users/profile
+   * @response `200` `UserResponse`
+   */
+  userControllerGetUserProfile = (params: RequestParams = {}) =>
+    this.request<UserResponse, any>({
+      path: `/api/users/profile`,
+      method: 'GET',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags user
+   * @name UserControllerUpdateUser
+   * @request PUT:/api/users/profile
+   * @response `200` `UserResponse`
+   */
+  userControllerUpdateUser = (
+    data: UpdateUserDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<UserResponse, any>({
+      path: `/api/users/profile`,
+      method: 'PUT',
+      body: data,
+      type: ContentType.Json,
+      format: 'json',
       ...params,
     });
 }
