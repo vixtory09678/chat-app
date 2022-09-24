@@ -4,15 +4,18 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Param,
   Put,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { UserGuard } from '../auth/guard/UserGuard';
+import { UserApp, UserType } from '../decorators/user.decorator';
 import { UpdateUserDto, UserResponse } from './dtos/user.dto';
 import { UserService } from './user.service';
 
 @Controller('users')
 @ApiTags('user')
+@UseGuards(UserGuard)
 export class UserController {
   constructor(private userService: UserService) {}
 
@@ -23,20 +26,18 @@ export class UserController {
     return this.userService.getUsers();
   }
 
-  @Get('/:id')
+  @Get('/profile')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'id', type: String })
   @ApiOkResponse({ type: UserResponse })
-  getUserProfile(@Param('id') id: string) {
-    return this.userService.getUserProfile(id);
+  getUserProfile(@UserApp() user: UserType) {
+    return this.userService.getUserProfile(user.userId);
   }
 
-  @Put('/:id')
+  @Put('/profile')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'id', type: String })
   @ApiBody({ type: UpdateUserDto, required: true })
   @ApiOkResponse({ type: UserResponse })
-  updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
-    return this.userService.updateUser(id, user);
+  updateUser(@UserApp() user: UserType, @Body() updateUser: UpdateUserDto) {
+    return this.userService.updateUser(user.userId, updateUser);
   }
 }
