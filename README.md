@@ -1,5 +1,5 @@
 # Chat app
-This repo is the simple chat application that include these features as below
+This repo is a simple chat application that includes these features below
 - [x] Users can register and login.
 - [ ] Users can view and edit their profile.
   - [x] View display name
