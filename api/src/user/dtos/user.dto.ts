@@ -15,10 +15,19 @@ export class UserResponse {
   @Expose()
   @ApiProperty()
   displayName: string;
+
+  @Expose()
+  @ApiProperty({ nullable: true })
+  profileImageUrl?: string;
+
+  @Expose()
+  @ApiProperty()
+  profileColor: string;
 }
 
 export class UpdateUserDto {
   @IsString()
   @IsNotEmpty()
+  @ApiProperty()
   displayName: string;
 }
