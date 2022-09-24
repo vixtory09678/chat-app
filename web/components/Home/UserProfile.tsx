@@ -26,6 +26,7 @@ export function UserProfile({ profile, updateProfile }: UserProfileProps) {
           { variant: 'error' },
           enqueueSnackbar,
         );
+        return;
       }
       await updateProfile();
       setEdit(false);
@@ -38,22 +39,24 @@ export function UserProfile({ profile, updateProfile }: UserProfileProps) {
 
   return (
     <div className="flex flex-col w-[310px] border-l-2 items-center gap-4 pt-5 px-2">
-      <div className="cursor-pointer">
-        <AvatarColor profile={profile} />
-        {/* <img
-        src={'mock/team-profile.jpeg'}
-        height={200}
-        width={200}
-        alt=""
-        className="rounded-full pt-5"
-      /> */}
+      <div className="cursor-pointer hover:bg-slate-200 p-4 rounded-full">
+        {profile.profileImageUrl ? (
+          <img
+            src={'mock/team-profile.jpeg'}
+            height={200}
+            width={200}
+            alt=""
+            className="rounded-full pt-5"
+          />
+        ) : (
+          <AvatarColor profile={profile} />
+        )}
       </div>
       <div className="flex gap-2 items-center">
         {canEdit ? (
           <input
             type="text"
             onChange={(e) => setDisPlayName(e.currentTarget.value)}
-            defaultValue={displayName}
             value={displayName}
             onKeyDown={(e) => saveDisplayName(e)}
             className="p-2 border-2"
