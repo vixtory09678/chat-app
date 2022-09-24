@@ -30,5 +30,3 @@ jobs:
         run: yarn web:lint
       - name: Run build
         run: yarn web:build
-      - name: Unit Test
-        run: yarn web:test
