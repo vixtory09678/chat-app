@@ -9,11 +9,24 @@ services:
       - 5432:5432
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=chat_app_development
+      - POSTGRES_DB=chat_app_developments
       - POSTGRES_HOST_AUTH_METHOD=trust
       - POSTGRES_PASSWORD=password
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo
+    container_name: chat-app-mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=chat_app_mongodb
+    volumes:
+      - ./mongodb:/data/db
 
   mqtt:
     image: eclipse-mosquitto
@@ -28,3 +41,5 @@ services:
 volumes:
   pgdata:
     name: chat-postgres-db
+  mongodata:
+    name: chat-mongodb

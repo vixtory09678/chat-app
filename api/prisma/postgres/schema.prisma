@@ -17,11 +17,25 @@ model User {
   displayName     String  @map("display_name")
   profileImageUrl String? @map("image_url")
   profileColor    String? @map("profile_color")
+
+  chatRooms ChatRoom[]
+
+  @@map("users")
+}
+
+model ChatRoom {
+  id       String @id @default(uuid())
+  roomName String @map("room_name")
+  users    User[]
+
+  @@map("chat_rooms")
 }
 
 model Session {
   id        String   @id
   sid       String   @unique
   data      String
-  expiresAt DateTime
+  expiresAt DateTime @map("expires_at")
+
+  @@map("sessions")
 }

@@ -68,7 +68,9 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
   }
 
-  await app.listen(port);
+  if (process.env.NODE_ENV !== 'test') {
+    await app.listen(port);
+  }
 }
 
 bootstrap();
