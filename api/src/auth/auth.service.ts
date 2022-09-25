@@ -45,16 +45,29 @@ export class AuthService {
   }
 
   async register(registerDto: UserRegisterDto) {
-    const ROUNDS = 10;
-    const hash = await bcrypt.hash(registerDto.password, ROUNDS);
+    try {
+      const foundUser = await this.prismaService.user.findUnique({
+        where: { username: registerDto.username },
+      });
 
-    await this.prismaService.user.create({
-      data: {
-        username: registerDto.username,
-        password: hash,
-        displayName: registerDto.username,
-        profileColor: genHexColor(),
-      },
-    });
+      if (foundUser) {
+        throw new Error(`User ${foundUser.username} already exists`);
+      }
+
+      const ROUNDS = 10;
+      const hash = await bcrypt.hash(registerDto.password, ROUNDS);
+
+      await this.prismaService.user.create({
+        data: {
+          username: registerDto.username,
+          password: hash,
+          displayName: registerDto.username,
+          profileColor: genHexColor(),
+        },
+      });
+    } catch (error) {
+      this.logger.error(error.message);
+      throw new BadRequestException(error.message);
+    }
   }
 }
