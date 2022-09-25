@@ -21,11 +21,11 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
-    "test": "DATABASE_NAME=chat_app_test DATABASE_MONGO_NAME=chat_app_mongodb_test jest --forceExit",
-    "test:watch": "DATABASE_NAME=chat_app_test DATABASE_MONGO_NAME=chat_app_mongodb_test jest --watch",
-    "test:cov": "DATABASE_NAME=chat_app_test DATABASE_MONGO_NAME=chat_app_mongodb_test jest --coverage",
-    "test:debug": "DATABASE_NAME=chat_app_test DATABASE_MONGO_NAME=chat_app_mongodb_test node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "DATABASE_NAME=chat_app_test DATABASE_MONGO_NAME=chat_app_mongodb_test jest --config ./test/jest-e2e.json --detectOpenHandles --forceExit"
+    "test": "NODE_ENV=test DATABASE_NAME=chat_app_test DATABASE_MONGO_NAME=chat_app_mongodb_test jest --forceExit",
+    "test:watch": "NODE_ENV=test DATABASE_NAME=chat_app_test DATABASE_MONGO_NAME=chat_app_mongodb_test jest --watch",
+    "test:cov": "NODE_ENV=test DATABASE_NAME=chat_app_test DATABASE_MONGO_NAME=chat_app_mongodb_test jest --coverage",
+    "test:debug": "NODE_ENV=test DATABASE_NAME=chat_app_test DATABASE_MONGO_NAME=chat_app_mongodb_test node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "NODE_ENV=test DATABASE_NAME=chat_app_test DATABASE_MONGO_NAME=chat_app_mongodb_test jest --config ./test/jest-e2e.json --detectOpenHandles --forceExit"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
