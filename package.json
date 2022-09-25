@@ -14,6 +14,8 @@
     "web:lint": "yarn workspace web lint",
     "api:build": "yarn workspace api build",
     "web:build": "yarn workspace web build",
-    "lint": "yarn workspace web lint && yarn workspace api lint"
+    "lint": "yarn workspace web lint && yarn workspace api lint",
+    "service:up": "yarn workspace api service:up",
+    "db:migrate": "yarn workspace api migrate:dev"
   }
 }
