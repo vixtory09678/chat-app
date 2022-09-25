@@ -4,6 +4,8 @@ import { ErrorMessage } from '@hookform/error-message';
 import { api } from '../../services/apiInstance';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
+import { errorHandler, toastMessage } from '../../src/api/error-handling';
+import { useSnackbar } from 'notistack';
 
 type RegisterSubmitType = {
   username: string;
@@ -13,6 +15,7 @@ type RegisterSubmitType = {
 export function RegisterForm() {
   const { replace } = useRouter();
   const password = useRef({});
+  const { enqueueSnackbar: toastProvider } = useSnackbar();
   const {
     handleSubmit,
     register,
@@ -23,18 +26,23 @@ export function RegisterForm() {
 
   const onSubmit = async (data: any) => {
     const { username, password } = data as RegisterSubmitType;
-    const res = await api.authControllerRegister({ username, password });
-    if (res.status !== 201) {
-      throw new Error('Register failed');
-    }
-    replace('/login');
+    api
+      .authControllerRegister({ username, password })
+      .then((response) => {
+        if (response.status === 201) {
+          replace('/login');
+        } else {
+          toastMessage('Something went wrong', { variant: 'warning' }, toastProvider);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        errorHandler(err, toastProvider);
+      });
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="h-auto w-[320px] bg-white p-5 rounded-md"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="h-auto w-[320px] bg-white p-5 rounded-md">
       <div className="grid gap-y-2">
         <p className="text-2xl text-gray-500 mb-2">Chat App</p>
         <input
@@ -52,9 +60,7 @@ export function RegisterForm() {
         <ErrorMessage
           errors={errors}
           name="username"
-          render={({ message }) => (
-            <p className="text-red-500 text-xs font-light">* {message}</p>
-          )}
+          render={({ message }) => <p className="text-red-500 text-xs font-light">* {message}</p>}
         />
 
         <input
@@ -76,9 +82,7 @@ export function RegisterForm() {
         <ErrorMessage
           errors={errors}
           name="password"
-          render={({ message }) => (
-            <p className="text-red-500 text-xs font-light">* {message}</p>
-          )}
+          render={({ message }) => <p className="text-red-500 text-xs font-light">* {message}</p>}
         />
 
         <input
@@ -88,8 +92,7 @@ export function RegisterForm() {
               value: true,
               message: 'Password is required',
             },
-            validate: (value) =>
-              value === password.current || 'The password is not match',
+            validate: (value) => value === password.current || 'The password is not match',
             minLength: {
               value: 8,
               message: 'Password should be at least 8 characters',
@@ -102,9 +105,7 @@ export function RegisterForm() {
         <ErrorMessage
           errors={errors}
           name="againPassword"
-          render={({ message }) => (
-            <p className="text-red-500 text-xs font-light">* {message}</p>
-          )}
+          render={({ message }) => <p className="text-red-500 text-xs font-light">* {message}</p>}
         />
 
         <Button label="Register" submit={true} className="mt-4" />
