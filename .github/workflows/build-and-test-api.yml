@@ -30,7 +30,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
       mqtt:
-        image: eclipse-mosquitt
+        image: eclipse-mosquitto
         env:
           POSTGRES_DB: chat_app_test
           POSTGRES_USER: postgres
