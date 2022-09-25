@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsNumber, validateSync } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, validateSync } from 'class-validator';
 
 enum Environment {
   Development = 'development',
@@ -14,6 +14,15 @@ class EnvironmentVariables {
 
   @IsNumber()
   PORT: number;
+
+  @IsNotEmpty()
+  DATABASE_MONGO_URL: string;
+
+  @IsNotEmpty()
+  DATABASE_URL: string;
+
+  @IsNotEmpty()
+  SESSION_SECRET: string;
 }
 
 export function validate(config: Record<string, unknown>) {
