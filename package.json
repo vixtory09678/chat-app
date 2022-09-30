@@ -16,6 +16,7 @@
     "web:build": "yarn workspace web build",
     "lint": "yarn workspace web lint && yarn workspace api lint",
     "service:up": "yarn workspace api service:up",
+    "service:down": "yarn workspace api service:down",
     "db:migrate": "yarn workspace api migrate:dev",
     "sync:message": "cat api/src/types/message.dto.ts >> web/src/types/message.dto.ts"
   }
