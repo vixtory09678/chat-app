@@ -24,9 +24,15 @@ model User {
 }
 
 model ChatRoom {
-  id       String @id @default(uuid())
-  roomName String @map("room_name")
-  users    User[]
+  id                  String   @id @default(uuid())
+  roomName            String   @map("room_name")
+  roomProfileColor    String?  @map("room_profile_color")
+  roomProfileImageUrl String?  @map("room_profile_image_url")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+  lastMessage         String?  @map("last_message")
+
+  users User[]
 
   @@map("chat_rooms")
 }

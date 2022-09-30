@@ -30,3 +30,35 @@ export interface UserResponse {
 export interface UpdateUserDto {
   displayName: string;
 }
+
+export interface CreateRoomDto {
+  participants: UserResponse[];
+}
+
+export interface RoomResponse {
+  roomId: string;
+  roomName: string;
+  participants: UserResponse[];
+
+  /** @format date-time */
+  updatedAt: string;
+  roomProfileColor: string | null;
+  roomProfileImageUrl: string | null;
+  lastMessage: string | null;
+}
+
+export interface Message {
+  id: string;
+  to: string;
+  text: string;
+  from: string;
+
+  /** @format date-time */
+  createdAt: string;
+}
+
+export interface ChatRoomResponse {
+  roomId: string;
+  participants: UserResponse[];
+  messages: Message[];
+}

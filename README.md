@@ -3,14 +3,14 @@ This repo is a simple chat application that includes these features below
 - [x] Users can register and login.
 - [ ] Users can view and edit their profile.
   - [x] View display name
-  - [ ] Edit display name
+  - [x] Edit display name
   - [ ] View profile picture
   - [ ] Edit profile picture
   - [x] View profile color
   - [ ] Edit profile color (if the profile picture doesn't exist will display the profile color by default)
-- [ ] Users can search user for chat messages.
-- [ ] Users can chat messages to other users.
-- [ ] Users can chat messages in groups.
+- [x] Users can search user for chat messages.
+- [x] Users can chat messages to other users.
+- [x] Users can chat messages in groups.
 
 ## Tech stack
 - Backend - NestJs (TypeScript)

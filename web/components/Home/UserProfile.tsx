@@ -6,6 +6,7 @@ import { KeyboardEvent, useEffect, useState } from 'react';
 import { api } from '../../services/apiInstance';
 import { toastMessage } from '../../src/api/error-handling';
 import { useSnackbar } from 'notistack';
+import { ConnectionStatus } from './ConnectionStatus';
 
 interface UserProfileProps {
   profile: UserResponse;
@@ -21,11 +22,7 @@ export function UserProfile({ profile, updateProfile }: UserProfileProps) {
     if (event.key === 'Enter') {
       const res = await api.userControllerUpdateUser({ displayName });
       if (res.status !== 200) {
-        toastMessage(
-          'Cannot save display name',
-          { variant: 'error' },
-          enqueueSnackbar,
-        );
+        toastMessage('Cannot save display name', { variant: 'error' }, enqueueSnackbar);
         return;
       }
       await updateProfile();
@@ -52,6 +49,7 @@ export function UserProfile({ profile, updateProfile }: UserProfileProps) {
           <AvatarColor profile={profile} />
         )}
       </div>
+
       <div className="flex gap-2 items-center">
         {canEdit ? (
           <input
@@ -62,17 +60,14 @@ export function UserProfile({ profile, updateProfile }: UserProfileProps) {
             className="p-2 border-2"
           />
         ) : (
-          <p className="font-light text-xl text-center">
-            {profile.displayName}
-          </p>
+          <>
+            <ConnectionStatus />
+            <p className="font-light text-xl text-center break-all">{profile.displayName}</p>
+          </>
         )}
 
         <div onClick={() => setEdit(true)}>
-          <EditIcon
-            className="cursor-pointer"
-            color={'info'}
-            fontSize={'small'}
-          />
+          <EditIcon className="cursor-pointer" color={'info'} fontSize={'small'} />
         </div>
       </div>
     </div>

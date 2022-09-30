@@ -1,38 +1,50 @@
 /* eslint-disable @next/next/no-img-element */
-import { ReactElement, useContext } from 'react';
+import { ReactElement, useContext, useEffect, useState } from 'react';
 import { ChatHistoryItem } from '../components/Home/ChatHistoryItem';
-import { MessageSender } from '../components/Home/MessageSender';
-import { Message } from '../components/Home/Message';
 import { SignOutBox } from '../components/Home/SignOutBox';
 import { SideHeader } from '../components/Home/SideHeader';
 import { AuthContextProvider, UserContext } from '../src/contexts/AuthContext';
-import { useMqttState } from 'mqtt-react-hooks';
 import { UserProfile } from '../components/Home/UserProfile';
+import { RoomResponse } from '../src/api/data-contracts';
+import useSWR from 'swr';
+import { errorHandler } from '../src/api/error-handling';
+import { useSnackbar } from 'notistack';
+import { roomsFetcher } from '../src/api/fetchers';
+import { ChatBox } from '../components/Home/ChatBox';
 
 function HomePage({}) {
   const user = useContext(UserContext);
+  const [currentRoom, setCurrentRoom] = useState<RoomResponse>();
+  const { enqueueSnackbar: toastProvider } = useSnackbar();
+  const { data: rooms, mutate: updateRooms } = useSWR<RoomResponse[]>('/api/rooms', roomsFetcher, {
+    onError: (err) => errorHandler(err, toastProvider),
+  });
 
-  const { connectionStatus } = useMqttState();
+  const onCreateNewRoom = async (room: RoomResponse) => {
+    setCurrentRoom(room);
+    await updateRooms();
+  };
+
+  useEffect(() => {
+    setCurrentRoom(rooms?.length ? rooms[0] : undefined);
+  }, [rooms]);
+
   return (
     <>
-      <div className="h-screen w-screen bg-slate-100 flex">
+      <div className="h-screen w-screen flex">
         <div className="w-[310px] border-r-2">
           <div className="flex flex-col justify-between h-full">
-            <SideHeader />
+            <SideHeader onCreateNewRoom={onCreateNewRoom} />
 
             <div className="h-full overflow-scroll">
               <div className="flex flex-col gap-2 w-fit py-2">
-                <ChatHistoryItem />
-                <ChatHistoryItem />
-                <ChatHistoryItem />
-                <ChatHistoryItem />
-                <ChatHistoryItem />
-                <ChatHistoryItem />
-                <ChatHistoryItem />
-                <ChatHistoryItem />
-                <ChatHistoryItem />
-                <ChatHistoryItem />
-                <ChatHistoryItem />
+                {rooms?.map((room) => (
+                  <ChatHistoryItem
+                    room={room}
+                    key={room.roomId}
+                    onCLick={() => setCurrentRoom(room)}
+                  />
+                ))}
               </div>
             </div>
 
@@ -41,38 +53,10 @@ function HomePage({}) {
         </div>
 
         {/* Chat Box */}
-        <div className="flex flex-col flex-grow">
-          <div className="bg-slate-100 px-5 py-3 border-b-2">
-            <p>{`${connectionStatus}`}</p>
-          </div>
-          <div className="flex flex-col gap-1 p-5 bg-slate-50 w-full flex-grow overflow-scroll">
-            <Message
-              friendImageProfileUrl={'mock/team-profile.jpeg'}
-              message={{ text: 'Hello!!', time: '12:32 10/12/22' }}
-              side="left"
-            />
-            <Message
-              friendImageProfileUrl={'mock/team-profile.jpeg'}
-              message={{ text: 'Hi!!', time: '12:32 10/12/22' }}
-              side="left"
-            />
-            <Message
-              message={{
-                text: 'Hello johnasdfasdfasfasdfasfasdfsadfsafsadfsafsadfsafsadfsafsdafsadfsadfsadf!!',
-                time: '12:32 10/12/22',
-              }}
-              side="right"
-            />
-          </div>
-
-          <MessageSender />
-        </div>
+        <ChatBox currentRoom={currentRoom} updateRooms={updateRooms} />
 
         {/* Profile */}
-        <UserProfile
-          profile={user.profile!}
-          updateProfile={user.updateProfile}
-        />
+        <UserProfile profile={user.profile!} updateProfile={user.updateProfile} />
       </div>
     </>
   );

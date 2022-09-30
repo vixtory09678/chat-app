@@ -1,8 +1,10 @@
 import { Autocomplete, Box, Button, TextField } from '@mui/material';
 import Modal from '@mui/material/Modal';
+import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 import { api } from '../../services/apiInstance';
-import { UserResponse } from '../../src/api/data-contracts';
+import { RoomResponse, UserResponse } from '../../src/api/data-contracts';
+import { errorHandler, toastMessage } from '../../src/api/error-handling';
 import { useUserContext } from '../../src/contexts/AuthContext';
 
 const style = {
@@ -15,10 +17,17 @@ const style = {
   boxShadow: 24,
 };
 
-export function SideHeader() {
+interface SideHeaderProps {
+  onCreateNewRoom: (room: RoomResponse) => void;
+}
+
+export function SideHeader({ onCreateNewRoom }: SideHeaderProps) {
   const [open, setOpen] = useState(false);
   const { profile } = useUserContext();
   const [friendList, setFriendList] = useState<UserResponse[]>();
+  const [selectedFriend, setSelectedFriend] = useState<UserResponse[]>();
+  const { enqueueSnackbar: toastProvider } = useSnackbar();
+  const [createNewRoomLoading, setCreateNewRoomLoading] = useState(false);
 
   useEffect(() => {
     api
@@ -38,13 +47,36 @@ export function SideHeader() {
     setOpen(true);
   };
 
-  const createNewRoom = () => {};
+  const createNewRoom = () => {
+    setCreateNewRoomLoading(true);
+    if (!selectedFriend) {
+      errorHandler({ message: 'Please select a friend at least one' }, toastProvider);
+      setCreateNewRoomLoading(false);
+      return;
+    }
+
+    api
+      .roomControllerCreateRoom({ participants: selectedFriend })
+      .then((response) => response.data)
+      .then((createdRoom) => {
+        onCreateNewRoom(createdRoom);
+        toastMessage('Successfully created room.', { variant: 'success' }, toastProvider);
+      })
+      .catch((error) => {
+        errorHandler(error, toastProvider);
+      })
+      .finally(() => {
+        setCreateNewRoomLoading(false);
+        handleClose();
+      });
+  };
 
   return (
     <>
       <Modal
         open={open}
         onClose={handleClose}
+        disableEscapeKeyDown
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -60,17 +92,23 @@ export function SideHeader() {
                 id="multiple-limit-tags"
                 options={friendList ?? []}
                 getOptionLabel={(option) => option.displayName}
-                noOptionsText
+                onChange={(_, values: UserResponse[]) => {
+                  setSelectedFriend([...values]);
+                }}
                 renderInput={(params) => {
                   return <TextField {...params} label="Search friend" autoFocus placeholder="Type the name" />;
                 }}
                 sx={{ width: '100%' }}
               />
+
               <button
-                className="py-2 px-4 bg-green-600 text-white hover:bg-green-700 rounded-[3px]"
+                disabled={createNewRoomLoading ? true : false}
+                className={`py-2 px-4 ${
+                  createNewRoomLoading ? 'bg-green-600 opacity-50' : 'bg-green-600 hover:bg-green-700'
+                } text-white  rounded-[3px]`}
                 onClick={createNewRoom}
               >
-                Create
+                {createNewRoomLoading ? 'Processing..' : 'Create'}
               </button>
             </div>
           </div>
