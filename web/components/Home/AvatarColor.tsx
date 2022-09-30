@@ -1,7 +1,7 @@
 import { UserResponse } from '../../src/api/data-contracts';
 
 interface AvatarColorProps {
-  profile: UserResponse;
+  profile?: UserResponse;
   type?: 'small' | 'medium' | 'large';
 }
 
@@ -30,10 +30,10 @@ export function AvatarColor({ profile, type = 'large' }: AvatarColorProps) {
     <>
       <div
         className={`${getSizeProfile()} rounded-full flex justify-center items-center border-blue-400`}
-        style={{ backgroundColor: `#${profile.profileColor}` }}
+        style={{ backgroundColor: `#${profile?.profileColor}` }}
       >
         <div className={`text-black ${getSizeTextProfile()} stroke-slate-700 opacity-50`}>
-          {profile.displayName[0]?.toUpperCase()}
+          {profile?.displayName[0]?.toUpperCase()}
         </div>
       </div>
     </>
