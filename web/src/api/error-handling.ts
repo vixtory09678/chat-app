@@ -20,7 +20,7 @@ export function errorHandler(
       window.location.href = '/login';
     }
   } else {
-    errorMessage = error.message || 'Unknown error';
+    errorMessage = error?.message || 'Unknown error';
   }
 
   toastProvider
