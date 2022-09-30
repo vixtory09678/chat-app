@@ -26,6 +26,14 @@ export function MessageSender({ onSendMessage, roomId }: MessageSenderProp) {
   const ref = useRef(null);
   const [count, setCount] = useState(0);
 
+  const sendMessage = () => {
+    setKeyEvent(KeyActionEvent.SEND);
+    setCount(0);
+    onSendMessage(message);
+    setMessage('');
+    setHeight(40);
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCount((prev) => (prev ? prev - 1 : 0));
@@ -40,19 +48,11 @@ export function MessageSender({ onSendMessage, roomId }: MessageSenderProp) {
     };
   }, [count]);
 
-  const sendMessage = () => {
-    setKeyEvent(KeyActionEvent.SEND);
-    setCount(0);
-    onSendMessage(message);
-    setMessage('');
-    setHeight(40);
-  };
-
   useEffect(() => {
     const buildedMessage = new MessageBuilder()
       .from(profile?.id ?? '')
       .to(roomId ?? '')
-      .msg(keyEvent === 'SEND' ? KeyActionEvent.IDLE : keyEvent)
+      .msg(keyEvent === KeyActionEvent.SEND ? KeyActionEvent.IDLE : keyEvent)
       .build();
     client?.publish('/rooms/chat/event', buildedMessage);
   }, [keyEvent]);
