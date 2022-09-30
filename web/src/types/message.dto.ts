@@ -1,25 +1,38 @@
-export interface MessageSender {
-  from: string;
-  to: string;
-  type: 'text' | 'image';
-  message: string;
-}
-export interface MessageSender {
-  from: string;
-  to: string;
-  type: 'text' | 'image';
-  message: string;
+import { Message } from '../api/data-contracts';
+export class MessageBuilder {
+  private message: Partial<Message> = {};
+
+  from(userId: string) {
+    this.message.from = userId;
+    return this;
+  }
+
+  to(userId: string) {
+    this.message.to = userId;
+    return this;
+  }
+
+  msg(msg: string) {
+    this.message.text = msg;
+    return this;
+  }
+
+  build(): string {
+    return JSON.stringify({
+      ...this.message,
+    });
+  }
 }
 
-export enum ActionType {
-  TYPING,
-  IDLE,
+function isJsonString(str: string) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
 }
 
-export interface MessageReceiver {
-  from: string;
-  to: string;
-  timestamp: string;
-  type: 'text' | 'image' | 'action';
-  message: string | ActionType;
+export function getMessageReceiver(msg: string): Message | undefined {
+  return isJsonString(msg) ? (JSON.parse(msg) as Message) : undefined;
 }
