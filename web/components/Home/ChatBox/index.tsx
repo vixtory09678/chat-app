@@ -19,10 +19,11 @@ interface ChatBoxProps {
 export function ChatBox({ currentRoom, updateRooms }: ChatBoxProps) {
   const { client } = useMqttState();
   const { profile } = useUserContext();
-  const [subscribePath, setSubscribePath] = useState<string>();
-  const { message } = useSubscription(subscribePath ?? []);
+  const { message } = useSubscription([`/rooms/${currentRoom?.roomId}/chat`]);
+  const { message: chatEvent } = useSubscription([`/rooms/${currentRoom?.roomId}/chat/event`]);
   const { enqueueSnackbar: toastProvider } = useSnackbar();
   const [receivedMessage, setReceiveMessage] = useState<Message[]>([]);
+  const [chatEventMessage, setChatEventMessage] = useState<Message[]>([]);
 
   const getProfile = (userId: string) => {
     return currentRoom?.participants.find((user) => user.id === userId);
@@ -31,7 +32,7 @@ export function ChatBox({ currentRoom, updateRooms }: ChatBoxProps) {
   useEffect(() => {
     if (currentRoom?.roomId) {
       setReceiveMessage([]);
-      setSubscribePath(`/rooms/${currentRoom?.roomId}/chat`);
+
       api
         .roomControllerGetChatRoom(currentRoom.roomId)
         .then((response) => response.data)
@@ -48,11 +49,26 @@ export function ChatBox({ currentRoom, updateRooms }: ChatBoxProps) {
     if (!message?.message) return;
     const receivedMessage = getMessageReceiver(message.message as string);
 
-    if (receivedMessage) {
-      setReceiveMessage((prev) => [...prev, receivedMessage]);
-    }
+    if (!receivedMessage) return;
+
+    setReceiveMessage((prev) => [...prev, receivedMessage]);
     updateRooms ? updateRooms() : null;
   }, [message?.message]);
+
+  useEffect(() => {
+    if (!chatEvent?.message) return;
+    const receivedMessage = getMessageReceiver(chatEvent?.message as string);
+
+    if (!receivedMessage) return;
+
+    if (receivedMessage.text === 'IDLE') {
+      setChatEventMessage((prev) =>
+        prev.filter((message) => message.from !== receivedMessage.from),
+      );
+      return;
+    }
+    setChatEventMessage((prev) => [...prev, receivedMessage]);
+  }, [chatEvent?.message]);
 
   const onSendMessage = (text: string) => {
     if (!profile || !currentRoom) return;
@@ -91,9 +107,20 @@ export function ChatBox({ currentRoom, updateRooms }: ChatBoxProps) {
             />
           </div>
         ))}
+        {chatEventMessage?.map((msg) => (
+          <>
+            {msg?.from !== profile?.id && (
+              <MessageItem
+                profile={getProfile(msg.from)}
+                message={{ text: 'Typing..', time: msg.createdAt }}
+                side={msg.from === profile?.id ? 'right' : 'left'}
+              />
+            )}
+          </>
+        ))}
       </div>
 
-      <MessageSender onSendMessage={onSendMessage} />
+      <MessageSender onSendMessage={onSendMessage} roomId={currentRoom?.roomId} />
     </div>
   );
 }

@@ -2,9 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { nanoid } from 'nanoid';
-import { MqttService, Payload, Subscribe } from 'nest-mqtt';
+import { MqttService, Params, Payload, Subscribe } from 'nest-mqtt';
 import { Room } from '../room-message/room-message.schema';
 import { Message as MessageDto } from '../room/dtos/room.dto';
+
+enum CHAT_EVENT {
+  IDLE = 'IDLE',
+  TYPING = 'TYPING',
+  SEND = 'SEND',
+}
 
 @Injectable()
 export class WorkerService {
@@ -25,6 +31,18 @@ export class WorkerService {
       JSON.stringify(messageToBeSent),
     );
     await this.saveMessage(messageToBeSent, nanoid());
+  }
+
+  @Subscribe('/rooms/chat/event')
+  async eventMessageHandler(@Payload() payload: MessageDto) {
+    const messageToBeSent: MessageDto = {
+      ...payload,
+      createdAt: new Date(),
+    };
+    await this.mqttService.publish(
+      `/rooms/${payload.to}/chat/event`,
+      JSON.stringify(messageToBeSent),
+    );
   }
 
   async saveMessage(message: MessageDto, id: string) {
