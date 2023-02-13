@@ -41,7 +41,7 @@
     "@quixo3/prisma-session-store": "^3.1.9",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.13.2",
+    "class-validator": "^0.14.0",
     "express-session": "^1.17.3",
     "faker": "^5.5.3",
     "mongoose": "^6.6.2",
